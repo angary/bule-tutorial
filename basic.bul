@@ -1,0 +1,1 @@
+% (x1 OR NOT x2) AND (NOT x1 OR x2 OR x3) AND NOT x1

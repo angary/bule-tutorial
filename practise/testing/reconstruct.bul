@@ -1,0 +1,15 @@
+size[N,M] :: #ground domain[0..N-1,0..M-1].
+domain[I,J] :: #exists[0] var(cell(I,J)).
+
+vector[h,I,C], domain[I,J] :: #ground cardinality_var[h(I),cell(I,J)].
+vector[h,I,C] :: #ground cardinality_bound[h(I),C].
+
+vector[v,J,C], domain[I,J] :: #ground cardinality_var[v(J),cell(I,J)].
+vector[v,J,C] :: #ground cardinality_bound[v(J),C].
+
+vector[s,K,C], domain[I,J], I+J==K :: #ground cardinality_var[s(K),cell(I,J)].
+vector[s,K,C] :: #ground cardinality_bound[s(K),C].
+
+vector[t,K,C], domain[I,J], size[N,M], M-1+I==K+J :: #ground cardinality_var[t(K),cell(I,J)].
+vector[t,K,C] :: #ground cardinality_bound[t(K),C].
+

@@ -1,0 +1,41 @@
+% Reduction from graph colouring to SAT
+
+% Map each vertex to 3 boolean variables, where each variable denotes if the vertex is that colour
+
+#exists[0] var, vag, vab.
+#exists[0] ver, veg, veb.
+% #exists[0] vdr, vdg, vdb.
+% #exists[0] vcr, vcg, vcb.
+
+#hide ~var, ~vag, ~vab.
+#hide ~ver, ~veg, ~veb.
+
+var|vag|vab.
+ver|veg|veb.
+% vdr|vdg|vdb.
+% vcr|vcg|vcb.
+
+% If it is red, it should not be (green or blue) as well
+% var -> !(vag | vab)
+% Implication is the (negation of the hypothesis) or the conclusion
+% Clause form
+
+% One or zero colours for a
+~var | ~vag.
+~var | ~vab.
+~vab | ~vag.
+
+% One or zero colours for e
+~ver | ~veg.
+~ver | ~veb.
+~veb | ~veg.
+
+% Ensures adjacent is not the same colour
+~var | ~ver.
+~vab | ~veb.
+~vag | ~veg.
+
+% We can write implications in bule2
+% var -> ~vag.
+% var -> ~vab.
+% vab -> ~vag.

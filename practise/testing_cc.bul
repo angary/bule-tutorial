@@ -1,0 +1,16 @@
+#ground dom[a].
+#ground dom[b].
+#ground dom[c].
+#ground dom[d].
+% #ground dom[e].
+
+% if dom[X] then exists var(X)
+dom[X]:: #exists[0] var(X).
+
+% if dom[X] then cardinality_var[0, X]
+dom[X]:: #ground cardinality_var[0, X].
+
+% cardinality bound of 2
+#ground cardinality_bound[0, 2].
+
+dom[X]:: #hide ~var(X).

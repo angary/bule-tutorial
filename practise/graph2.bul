@@ -1,0 +1,18 @@
+#ground vertex[a].
+#ground vertex[b].
+#ground vertex[d].
+#ground vertex[c].
+
+#ground colour[r].
+#ground colour[g].
+#ground colour[b].
+
+% Square with 2 diagonals
+#ground edge[a, b].
+#ground edge[a, d].
+#ground edge[b, d].
+#ground edge[d, c].
+#ground edge[c, a].
+#ground edge[c, b].
+
+

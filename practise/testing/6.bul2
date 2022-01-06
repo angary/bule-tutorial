@@ -1,0 +1,5 @@
+#ground size[10,7].
+#ground vector[h,0,4]. #ground vector[h,1,2]. #ground vector[h,2,1]. #ground vector[h,3,1]. #ground vector[h,4,1]. #ground vector[h,5,5]. #ground vector[h,6,3]. #ground vector[h,7,2]. #ground vector[h,8,2]. #ground vector[h,9,5]. 
+#ground vector[v,0,5]. #ground vector[v,1,5]. #ground vector[v,2,3]. #ground vector[v,3,3]. #ground vector[v,4,3]. #ground vector[v,5,4]. #ground vector[v,6,3]. 
+#ground vector[s,0,0]. #ground vector[s,1,0]. #ground vector[s,2,2]. #ground vector[s,3,3]. #ground vector[s,4,2]. #ground vector[s,5,2]. #ground vector[s,6,2]. #ground vector[s,7,3]. #ground vector[s,8,1]. #ground vector[s,9,2]. #ground vector[s,10,2]. #ground vector[s,11,1]. #ground vector[s,12,2]. #ground vector[s,13,2]. #ground vector[s,14,2]. #ground vector[s,15,0]. 
+#ground vector[t,0,0]. #ground vector[t,1,1]. #ground vector[t,2,2]. #ground vector[t,3,1]. #ground vector[t,4,1]. #ground vector[t,5,0]. #ground vector[t,6,3]. #ground vector[t,7,3]. #ground vector[t,8,2]. #ground vector[t,9,2]. #ground vector[t,10,2]. #ground vector[t,11,3]. #ground vector[t,12,2]. #ground vector[t,13,3]. #ground vector[t,14,1]. #ground vector[t,15,0]. 

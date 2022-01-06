@@ -1,0 +1,41 @@
+% Will now use grounding
+% Square brackets used for grounding sets
+% Round brackets are used for searching within the set
+% Reduction from graph colouring to SAT
+% vertex[a].
+% vertex[e].
+% vertex[d].
+% vertex[c].
+
+% colour[r].
+% colour[g].
+% colour[b].
+% colour[y].
+
+% edge[a, e].
+% edge[a, d].
+% edge[e, d].
+% edge[d, c].
+% edge[c, a].
+% edge[c, e].
+
+% Note the model above has been commented out, but can be run with
+% bule2 --solve --models 0 test3.bul graph2.bul   
+
+% Map each vertex to 3 boolean variables, where each variable denotes if the vertex is that colour
+
+% SAT equations just need exists ZERO, QBF may need a larger range, 0 = alternation depth
+vertex[V], colour[C]::#exists[0] v(V,C).
+
+vertex[V], colour[C]::#hide ~v(V,C).
+
+% It has to be at least one colour
+% :: is used for conjunctive
+% : is used for disjunctive
+vertex[V]:: colour[C]:v(V,C).
+
+% One or zero colours for a
+vertex[V], colour[C1], colour[C2], C1 != C2::~v(V,C1) | ~v(V,C2).
+
+% Ensures adjacent is not the same colour
+colour[C], edge[V1, V2]::~v(V1,C) | ~v(V2,C).
