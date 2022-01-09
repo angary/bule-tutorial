@@ -4,9 +4,9 @@
 
 Bule is a tool used to create CNF (conjunctive normal form) encodings for SAT solving.
 
-- SAT (Boolean Satisfiability) is the problem of determining if there exists an assignment of True or False to the variables of a boolean formula.
+- SAT (Boolean Satisfiability) is the problem of determining if there exists an assignment of `True` or `False` to the variables of a boolean formula such that the formula evaluates to `True`.
 - A formula consists of 
-  - **Variables**: Variables that can either be true or false
+  - **Variables**: Variables that can either be `True` or `False`
   - **Parentheses**: Things in parentheses are evaluated first
   - **Conjunction**: AND operator (`||`)
   - **Disjunction**: OR operator (`&&`)
@@ -16,10 +16,9 @@ Bule is a tool used to create CNF (conjunctive normal form) encodings for SAT so
   - English form: Everything inside the brackets are "OR"ed together, and all the brackets are "AND"ed together
   - Example: `(x1 OR NOT x2) AND (NOT x1 OR x2 OR x3) AND NOT x1` from [Wikipedia](https://en.wikipedia.org/wiki/Boolean_satisfiability_problem#:~:text=clause.%20The%20formula-,(x1%20%E2%88%A8%20%C2%ACx2)%20%E2%88%A7%20(%C2%ACx1%20%E2%88%A8%20x2%20%E2%88%A8%20x3)%20%E2%88%A7%20%C2%ACx1,-is%20in%20conjunctive)
 
-Bule helps you "encode" or "represent" these boolean formulas cleanly.
-You can then use a SAT solver to solve these formulas (find an assignment of True or False to the variables s.t. the formula evaluates to True).
+Bule helps you "encode" or "represent" these boolean formulas cleanly (the full list of its abilities is listed on the GitHub README).
+You can then use a SAT solver to solve these formulas (find an assignment of `True` or `False` to the variables s.t. the formula evaluates to `True`).
 
-It also does more things.
 
 ## Formula Representation
 
@@ -34,8 +33,8 @@ Representation of `(x1 OR NOT x2) AND (NOT x1 OR x2 OR x3) AND NOT x1` in Bule:
 
 **Note:**
 - Each clause is on a different line, OR is done through `|` and NOT is done through `~`.
-- A line ends with a `.` (a bit like a semicolon in most programming languages).
-- Formula variables have to be declared with `#exists[0]`
+- A line ends with a `.` (similar to semicolon in most programming languages).
+- Formula (AKA search) variables have to be declared with `#exists[0]`
 - Lines that begin with `%` are comments
 
 > How many different assignments of Trues and Falses will evaluate to True for this formula (solve manually)?
@@ -50,7 +49,7 @@ To show all models (all assignments that can be True):
 bule2 --solve --models 0 basic.bul
 ```
 
-To show the first `x` models
+To show the first `x` satisfying models
 ```
 bule2 --solve --models x basic.bul
 ```
@@ -100,7 +99,7 @@ Model 6:  set_a_blue ~set_a_green ~set_a_red ~set_e_blue ~set_e_green  set_e_red
 No more models. Total: 6 displayed models out of 6 models.
 ```
 
-If a variable has a `~` in front of it, it means it is false.
+If a variable has a `~` in front of it, it means it is assigned `False`.
 Since we only care about what vertex is what colour, adding / uncommenting the lines
 
 ```
@@ -108,7 +107,7 @@ Since we only care about what vertex is what colour, adding / uncommenting the l
 #hide ~set_e_blue, ~set_e_green, ~set_e_red.
 ```
 
-will hide those variables from the output if they are false (and if there is no `~` in front of each variable, we will hide the variables from the output if they are true).
+will hide those variables from the output if they are false (and if there is no `~` in front of each variable, we will hide the variables from the output if they are assigned `True`).
 
 The new output looks like this:
 ```
@@ -123,7 +122,6 @@ Model 6:  set_a_blue  set_e_red
 No more models. Total: 6 displayed models out of 6 models.
 ```
 
-
 ## Grounding
 
 This process gets quite intensive if we were to add more colours, vertices, and edges.
@@ -136,7 +134,7 @@ Currently there is a lot of copy and pasting, but using bule we can perform grou
     ~set(a,green) | ~set(e,green).
     ~set(a,red)   | ~set(e,red).
     ```
-   We can declare grounding variables (variables that will not be used in final boolean formula, but will help us "express" the formulas better) at the top of the file.
+   We can declare grounding variables (variables that will not be used in final formula, but will help us "express" the formulas better) at the top of the file.
    ```
    #ground colour[blue].
    #ground colour[green].
@@ -149,7 +147,7 @@ Currently there is a lot of copy and pasting, but using bule we can perform grou
    ```
    colour[C] :: ~set(a,C) | ~set(e,C).
    ```
-   which reads as *for C in colour, we have the clause: ~set(a,C) | ~set(e,C)*.
+   which reads as *for all C in colour, we have the clause: ~set(a,C) | ~set(e,C)*.
    We can verify this is the same as our original clauses by running
    `bule graph_colouring_basic.bul`, 
    which prints out the grounded output (the result of taking our higher level description into the clauses).
@@ -199,7 +197,7 @@ Currently there is a lot of copy and pasting, but using bule we can perform grou
    ~set(a,red) | ~set(e,red).
    ```
    At the moment it is hard to discern where our clauses are.
-   If we add something like `| debug.` or `| <line_number>.`, i.e. 
+   If we add something like `| debug.` or `| <line_number>.` at the end of the line, i.e. 
    ```
    vertex[V], colour[C1], colour[C2], C1 != C2 :: ~set(V,C1) | ~set(V,C2) | debug.
    ```
@@ -232,6 +230,7 @@ Currently there is a lot of copy and pasting, but using bule we can perform grou
    ~set(a,red) | ~set(e,red).
    ```
    which introduces a new variable, but can make it easier to determine what clauses are being generated.
+   A useful tip is to pipe the output through `grep`, i.e. `bule2 graph_colouring_basic.bul | grep debug` to see only the clauses that have `debug` in it.
    
    Here we can see that there are unnecessary clauses being generated, i.e. below, the 2nd clause below is the same as the 1st
    ```
@@ -253,8 +252,8 @@ Currently there is a lot of copy and pasting, but using bule we can perform grou
    ```
    vertex[V] :: colour[C] : set(V,C).
    ```
-   Which reads as *for all vertices `V`, we have a clause that is the conjunction of `set(V,C)` for all colours `C`*.
-5. Finally we can "clean up" our code a bit by introducing
+   Which reads as *for all `V` in vertices, we have a clause that is the conjunction of `set(V,C)` for all colours `C`*.
+5. We can further clean up our code by having a set of edges, i.e.
    ```
    #ground edge[a,e].
    ```
@@ -264,7 +263,7 @@ Currently there is a lot of copy and pasting, but using bule we can perform grou
    ```
    so that we can introduce new edges easily.
 6. Finally, it helps to split up our "models" and "rules".
-   We have a lot of `#ground x[y]` variables at the top, which encodes a graph, its vertices and colours.
+   We have a lot of `#ground x[y]` variables at the top, which encodes a graph of edges, and vertices, along with colours.
    We also have the clauses below which encode the graph colouring problem.
    
    It helps the split the file into 2, i.e. [graph_colouring_grounded.bul](graph_colouring_grounded.bul) (which represents the graph colouring problem) and [graph1.bul](graph1.bul) (which represents the graph in the image above).
