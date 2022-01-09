@@ -1,4 +1,4 @@
-% Same model as graph1 except with an between a and b
+% Same model as graph1 except with edges bewteen a and b, a and d
 
 #ground vertex[a].
 #ground vertex[b].
@@ -12,6 +12,7 @@
 
 #ground edge[a,b].
 #ground edge[a,c].
+#ground edge[a,d].
 #ground edge[a,e].
 #ground edge[b,c].
 #ground edge[b,d].

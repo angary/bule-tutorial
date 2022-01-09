@@ -142,7 +142,7 @@ Currently there is a lot of copy and pasting, but using bule we can perform grou
    #ground colour[green].
    #ground colour[red].
    ```
-   Here we are saying we definte the set `colour` which contains `blue`, `green`, and `red`.
+   Here we are saying *we define the set `colour` which contains `blue`, `green`, and `red`*.
    Note that we use square brackets `[]` instead of parenthesis `()`.
 
    Then we can rewrite the original lines to:
@@ -150,17 +150,138 @@ Currently there is a lot of copy and pasting, but using bule we can perform grou
    colour[C] :: ~set(a,C) | ~set(e,C).
    ```
    which reads as *for C in colour, we have the clause: ~set(a,C) | ~set(e,C)*.
-   We can verify this by running
+   We can verify this is the same as our original clauses by running
    `bule graph_colouring_basic.bul`, 
    which prints out the grounded output (the result of taking our higher level description into the clauses).
-   If we are correct, the output should be the same as our original clauses.
-3. 
-> Show disjunction and conjunction
+3. We can also rewrite the following lines
+   ```
+   ~set_a_blue  | ~set_a_green.
+   ~set_a_blue  | ~set_a_red.
+   ~set_a_green | ~set_a_red.
 
-
-We can also ground multiple files.
-
-For example, it may be ideal to have the encoding of vertex colouring in one file and then the encoding of a graph in another.
-
-
-## Bonus
+   ~set_e_blue  | ~set_e_green.
+   ~set_e_blue  | ~set_e_red.
+   ~set_e_green | ~set_e_red.
+   ```
+   by declaring the set of vertexes (note we can also ground variables in one one line)
+   ```
+   #ground vertex[a], vertex[e].
+   ```
+   
+   Now the above clauses can be rewritten as 
+   ```
+   vertex[V], colour[C1], colour[C2], C1 != C2 :: ~set(V,C1) | ~set(V,C2).
+   ```
+   Running `bule graph_colouring_basic.bul` however produces the set of clauses 
+   ```
+   #exists[0] :: set(e,red)?
+   #exists[0] :: set(e,green)?
+   #exists[0] :: set(e,blue)?
+   #exists[0] :: set(a,red)?
+   #exists[0] :: set(a,green)?
+   #exists[0] :: set(a,blue)?
+   set(a,blue) | set(a,green) | set(a,red).
+   set(e,blue) | set(e,green) | set(e,red).
+   ~set(a,blue) | ~set(a,green).
+   ~set(a,blue) | ~set(a,red).
+   ~set(a,green) | ~set(a,blue).
+   ~set(a,green) | ~set(a,red).
+   ~set(a,red) | ~set(a,blue).
+   ~set(a,red) | ~set(a,green).
+   ~set(e,blue) | ~set(e,green).
+   ~set(e,blue) | ~set(e,red).
+   ~set(e,green) | ~set(e,blue).
+   ~set(e,green) | ~set(e,red).
+   ~set(e,red) | ~set(e,blue).
+   ~set(e,red) | ~set(e,green).
+   ~set(a,blue) | ~set(e,blue).
+   ~set(a,green) | ~set(e,green).
+   ~set(a,red) | ~set(e,red).
+   ```
+   At the moment it is hard to discern where our clauses are.
+   If we add something like `| debug.` or `| <line_number>.`, i.e. 
+   ```
+   vertex[V], colour[C1], colour[C2], C1 != C2 :: ~set(V,C1) | ~set(V,C2) | debug.
+   ```
+   we get the following output after running the grounding
+   ```
+   Warning. Undeclared variables: debug
+   
+   #exists[0] :: set(e,red)?
+   #exists[0] :: set(e,green)?
+   #exists[0] :: set(e,blue)?
+   #exists[0] :: set(a,red)?
+   #exists[0] :: set(a,green)?
+   #exists[0] :: set(a,blue)?
+   set(a,blue) | set(a,green) | set(a,red).
+   set(e,blue) | set(e,green) | set(e,red).
+   ~set(a,blue) | ~set(a,green) | debug.
+   ~set(a,blue) | ~set(a,red) | debug.
+   ~set(a,green) | ~set(a,blue) | debug.
+   ~set(a,green) | ~set(a,red) | debug.
+   ~set(a,red) | ~set(a,blue) | debug.
+   ~set(a,red) | ~set(a,green) | debug.
+   ~set(e,blue) | ~set(e,green) | debug.
+   ~set(e,blue) | ~set(e,red) | debug.
+   ~set(e,green) | ~set(e,blue) | debug.
+   ~set(e,green) | ~set(e,red) | debug.
+   ~set(e,red) | ~set(e,blue) | debug.
+   ~set(e,red) | ~set(e,green) | debug.
+   ~set(a,blue) | ~set(e,blue).
+   ~set(a,green) | ~set(e,green).
+   ~set(a,red) | ~set(e,red).
+   ```
+   which introduces a new variable, but can make it easier to determine what clauses are being generated.
+   
+   Here we can see that there are unnecessary clauses being generated, i.e. below, the 2nd clause below is the same as the 1st
+   ```
+   ~set(a,blue) | ~set(a,green).
+   ~set(a,green) | ~set(a,blue).
+   ```
+   If we want to avoid these repeated clauses, we can replace `C1 != C2` with `C1 < C2`
+   ```
+   vertex[V], colour[C1], colour[C2], C1 < C2 :: ~set(V,C1) | ~set(V,C2).
+   ```
+   and this will now remove the duplicated clauses.
+4. Finally we can also replace the following clauses
+   ```
+   set_a_blue | set_a_green | set_a_red.
+   set_e_blue | set_e_green | set_e_red.
+   ```
+   However, note that this is a disjunction between the colours.
+   As a result we have to do
+   ```
+   vertex[V] :: colour[C] : set(V,C).
+   ```
+   Which reads as *for all vertices `V`, we have a clause that is the conjunction of `set(V,C)` for all colours `C`*.
+5. Finally we can "clean up" our code a bit by introducing
+   ```
+   #ground edge[a,e].
+   ```
+   and then replacing the last line with
+   ```
+   edge[V1,V2], colour[C] :: ~set(V1,C) | ~set(V2,C).
+   ```
+   so that we can introduce new edges easily.
+6. Finally, it helps to split up our "models" and "rules".
+   We have a lot of `#ground x[y]` variables at the top, which encodes a graph, its vertices and colours.
+   We also have the clauses below which encode the graph colouring problem.
+   
+   It helps the split the file into 2, i.e. [graph_colouring_grounded.bul](graph_colouring_grounded.bul) (which represents the graph colouring problem) and [graph1.bul](graph1.bul) (which represents the graph in the image above).
+   Then we can run the command
+   ```
+   bule2 --solve --models 0 graph_colouring_grounded.bul graph1.bul
+   ```
+   to find all the valid instances of colour assignments for graph1.
+   
+   The benefit of this is that we can now make different graph models in their own files and then solve them by adding the file as a command line argument in bule.
+   
+   [graph2.bul](graph2.bul) introduces a new edge between a and b, and the number of models compared to [graph1](graph1.bul) goes down from 12 to 6.
+   [graph3.bul](graph3.bul) is extended off [graph2.bul](graph2.bul) and introduces a new edge between a and d.
+   Solving for graph3 produces the output
+   ```
+   Instance ground. Starts solving
+   UNSAT
+   No more models. Total: 0 displayed models out of 0 models.
+   ```
+   meaning that there is no possible assignment of colours to vertices such that adjacent vertices are different colours.

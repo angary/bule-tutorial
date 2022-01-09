@@ -1,6 +1,4 @@
-
-% We want to loop through all the colours
-
+% File containing the rules to enforce graphc colouring
 
 vertex[V], colour[C] :: #exists[0] set(V,C).
 vertex[V], colour[C] :: #hide ~set(V,C).
